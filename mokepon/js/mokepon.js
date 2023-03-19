@@ -79,7 +79,7 @@ function iniciarJuego() {
         contenedorTarjetas.innerHTML += opcionDeMokepones
 
     });
-    
+
     inputHipodoge = document.getElementById(hipodoge.nombre.toLowerCase())
     inputCapipepo = document.getElementById(capipepo.nombre.toLowerCase())
     inputRatigueya = document.getElementById(ratigueya.nombre.toLowerCase())
@@ -95,11 +95,11 @@ function seleccionarMascotaJugador() {
     sectionSeleccionarMascota.style.display = 'none'
     sectionSeleccionarAtaque.style.display = 'flex'
     if (inputHipodoge.checked) {
-        spanMascotaJugador.innerHTML = 'Hipodoge'
+        spanMascotaJugador.innerHTML = inputHipodoge.id.charAt(0).toUpperCase() + inputHipodoge.id.slice(1)
     } else if (inputCapipepo.checked) {
-        spanMascotaJugador.innerHTML = 'Capipepo'
+        spanMascotaJugador.innerHTML = inputCapipepo.id.charAt(0).toUpperCase() + inputCapipepo.id.slice(1)
     } else if (inputRatigueya.checked) {
-        spanMascotaJugador.innerHTML = 'Ratigueya'
+        spanMascotaJugador.innerHTML = inputRatigueya.id.charAt(0).toUpperCase() + inputRatigueya.id.slice(1)
     } else {
         alert('Selecciona una mascota')
     }

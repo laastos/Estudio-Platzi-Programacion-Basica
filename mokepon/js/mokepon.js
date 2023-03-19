@@ -8,9 +8,6 @@ const botonTierra = document.getElementById('boton-tierra')
 const botonFuego = document.getElementById('boton-fuego')
 const botonAgua = document.getElementById('boton-agua')
 const botonReiniciar = document.getElementById('boton-reiniciar')
-const inputHipodoge = document.getElementById('hipodoge')
-const inputCapipepo = document.getElementById('capipepo')
-const inputRatigueya = document.getElementById('ratigueya')
 const spanMascotaJugador = document.getElementById('mascota-jugador')
 const spanMascotaEnemigo = document.getElementById('mascota-enemigo')
 const spanVidasJugador = document.getElementById('vidas-jugador')
@@ -24,6 +21,9 @@ let mokepones = []
 let ataqueJugador
 let ataqueEnemigo
 let opcionDeMokepones
+let inputHipodoge
+let inputCapipepo
+let inputRatigueya
 let vidasJugador = 3
 let vidasEnemigo = 3
 
@@ -77,7 +77,13 @@ function iniciarJuego() {
         </label>
         `
         contenedorTarjetas.innerHTML += opcionDeMokepones
+
     });
+    
+    inputHipodoge = document.getElementById(hipodoge.nombre.toLowerCase())
+    inputCapipepo = document.getElementById(capipepo.nombre.toLowerCase())
+    inputRatigueya = document.getElementById(ratigueya.nombre.toLowerCase())
+    
     botonMascotaJugador.addEventListener('click', seleccionarMascotaJugador)
     botonFuego.addEventListener('click', ataqueFuego)
     botonAgua.addEventListener('click', ataqueAgua)

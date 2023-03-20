@@ -19,6 +19,7 @@ sectionReiniciar.style.display = 'none'
 let mokepones = []
 let ataqueJugador = []
 let ataqueEnemigo = []
+let ataqueEnemigoDisponible = []
 let opcionDeMokepones
 let mascotaJugador
 let mascotaEnemigo
@@ -49,9 +50,26 @@ let capipepo = new Mokepon('Capipepo', './assets/mokepons_mokepon_capipepo_attac
 let ratigueya = new Mokepon('Ratigüeya', './assets/mokepons_mokepon_ratigueya_attack.png', 5)
 // Ataques
 let ataquesMascotas = {
-    '🔥': `<button id="boton-fuego" class="boton-de-ataque boton-fuego">Fuego 🔥</button>`,
-    '💧': `<button id="boton-agua" class="boton-de-ataque boton-agua">Agua 💧</button>`,
-    '🌱': `<button id="boton-tierra" class="boton-de-ataque boton-tierra">Tierra 🌱</button>`
+    '🔥': {
+        texto: 'FUEGO',
+        clase: 'boton-fuego',
+        html: `<button id="boton-fuego" class="boton-de-ataque boton-fuego">Fuego 🔥</button>`
+    },
+    '💧': {
+        texto: 'AGUA',
+        clase: 'boton-agua',
+        html: `<button id="boton-agua" class="boton-de-ataque boton-agua">Agua 💧</button>`
+    },
+    '🌱': {
+        texto: 'TIERRA',
+        clase: 'boton-tierra',
+        html: `<button id="boton-tierra" class="boton-de-ataque boton-tierra">Tierra 🌱</button>`
+    },
+    '🎐': {
+        texto: 'AIRE',
+        clase: 'boton-aire',
+        html: `<button id="boton-aire" class="boton-de-ataque boton-aire">Aire 🎐</button>`
+    }
 }
 
 hipodoge.ataques.push(
@@ -115,54 +133,58 @@ function seleccionarMascotaJugador() {
     } else {
         alert('Selecciona una mascota')
     }
-    extraerAtaques('JUGADOR')
+    let ataques = extraerAtaques(mascotaJugador)
+    mostrarAtaques(ataques)
+    secuenciaAtaques()
+
     seleccionarMascotaEnemigo()
+    ataques = extraerAtaques(mascotaEnemigo)
 }
 
 function seleccionarMascotaEnemigo() {
     let mascotaAleatoria = aleatorio(0, mokepones.length - 1)
 
-    spanMascotaEnemigo.innerHTML = mokepones[mascotaAleatoria].nombre
+    mascotaEnemigo = mokepones[mascotaAleatoria]
+    ataqueEnemigoDisponible = [ ...mascotaEnemigo.ataques ]
+    spanMascotaEnemigo.innerHTML = mascotaEnemigo.nombre
 }
 
-function extraerAtaques(jugador) {
+function extraerAtaques(mascota) {
     let ataques
     for (let mokepon of mokepones) {
-        if (mokepon.nombre === mascotaJugador) {
+        if (mokepon.nombre === mascota) {
             ataques = mokepon.ataques
         }
     }
-    mostrarAtaques(ataques, jugador)
+    return ataques
 }
 
-function mostrarAtaques(ataques, jugador) {
+function mostrarAtaques(ataques) {
     contenedorAtaques.innerHTML = ''
     ataques.forEach((ataque) => {
-        contenedorAtaques.innerHTML += ataquesMascotas[ataque.nombre]
+        contenedorAtaques.innerHTML += ataquesMascotas[ataque.nombre].html
     })
 
     botonTierra = document.getElementById('boton-tierra')
     botonFuego = document.getElementById('boton-fuego')
     botonAgua = document.getElementById('boton-agua')
-
-    secuenciaAtaques()
 }
 
 function secuenciaAtaques() {
     document.querySelectorAll('.boton-de-ataque').forEach((boton) => {
         boton.addEventListener('click', (e) => {
-            console.log(e.target.classList)
+            // Deshabilitar el boton del ataque
+            e.target.disabled = true
+            e.target.style.background = '#112f58'
+            // Valida el tipo de ataque del boton
             if (e.target.classList.contains('boton-tierra')) {
                 ataqueJugador.push('TIERRA')
-                ataqueTierra()
             }
             if (e.target.classList.contains('boton-fuego')) {
                 ataqueJugador.push('FUEGO')
-                ataqueFuego()
             }
             if (e.target.classList.contains('boton-agua')) {
                 ataqueJugador.push('AGUA')
-                ataqueAgua()
             }
             ataqueAleatorioEnemigo()
         })
@@ -170,31 +192,30 @@ function secuenciaAtaques() {
 }
 
 function ataqueAleatorioEnemigo() {
-    let ataqueAleatorio = aleatorio(1,3)
-    
-    if (ataqueAleatorio == 1) {
-        ataqueEnemigo = 'FUEGO'
-    } else if (ataqueAleatorio == 2) {
-        ataqueEnemigo = 'AGUA'
-    } else {
-        ataqueEnemigo = 'TIERRA'
+    let ataquesLength = ataqueEnemigoDisponible.length
+    if (ataquesLength > 0) {
+        let ataqueAleatorio = aleatorio(1, ataquesLength)
+        let ataqueId = ataqueEnemigoDisponible[ataqueAleatorio - 1].nombre
+        ataqueEnemigoDisponible.splice(ataqueAleatorio - 1, 1)
+        ataqueEnemigo.push(ataquesMascotas[ataqueId].texto)
+        combate()
     }
-
-    combate()
 }
 
 function combate() {
-    if(ataqueEnemigo == ataqueJugador) {
+    let ataqueJugadorTemporal = ataqueJugador.slice(-1)
+    let ataqueEnemigoTemporal = ataqueEnemigo.slice(-1)
+    if (ataqueEnemigoTemporal == ataqueJugadorTemporal) {
         crearMensaje("EMPATE")
-    } else if(ataqueJugador == 'FUEGO' && ataqueEnemigo == 'TIERRA') {
+    } else if(ataqueJugadorTemporal == 'FUEGO' && ataqueEnemigoTemporal == 'TIERRA') {
         crearMensaje("GANASTE")
         vidasEnemigo--
         spanVidasEnemigo.innerHTML = vidasEnemigo
-    } else if(ataqueJugador == 'AGUA' && ataqueEnemigo == 'FUEGO') {
+    } else if(ataqueJugadorTemporal == 'AGUA' && ataqueEnemigoTemporal == 'FUEGO') {
         crearMensaje("GANASTE")
         vidasEnemigo--
         spanVidasEnemigo.innerHTML = vidasEnemigo
-    } else if(ataqueJugador == 'TIERRA' && ataqueEnemigo == 'AGUA') {
+    } else if(ataqueJugadorTemporal == 'TIERRA' && ataqueEnemigoTemporal == 'AGUA') {
         crearMensaje("GANASTE")
         vidasEnemigo--
         spanVidasEnemigo.innerHTML = vidasEnemigo
@@ -219,8 +240,8 @@ function crearMensaje(resultado) {
     let nuevoAtaqueDelEnemigo = document.createElement('p')
 
     sectionMensajes.innerHTML = resultado
-    nuevoAtaqueDelJugador.innerHTML = ataqueJugador
-    nuevoAtaqueDelEnemigo.innerHTML = ataqueEnemigo
+    nuevoAtaqueDelJugador.innerHTML = ataqueJugador.slice(-1)
+    nuevoAtaqueDelEnemigo.innerHTML = ataqueEnemigo.slice(-1)
 
     ataquesDelJugador.appendChild(nuevoAtaqueDelJugador)
     ataquesDelEnemigo.appendChild(nuevoAtaqueDelEnemigo)

@@ -198,33 +198,41 @@ function ataqueAleatorioEnemigo() {
         let ataqueId = ataqueEnemigoDisponible[ataqueAleatorio - 1].nombre
         ataqueEnemigoDisponible.splice(ataqueAleatorio - 1, 1)
         ataqueEnemigo.push(ataquesMascotas[ataqueId].texto)
+        iniciarPelea()
+    }
+}
+
+function iniciarPelea() {
+    if (ataqueJugador.length >= 5) {
         combate()
     }
 }
 
 function combate() {
-    let ataqueJugadorTemporal = ataqueJugador.slice(-1)
-    let ataqueEnemigoTemporal = ataqueEnemigo.slice(-1)
-    if (ataqueEnemigoTemporal == ataqueJugadorTemporal) {
-        crearMensaje("EMPATE")
-    } else if(ataqueJugadorTemporal == 'FUEGO' && ataqueEnemigoTemporal == 'TIERRA') {
-        crearMensaje("GANASTE")
-        vidasEnemigo--
-        spanVidasEnemigo.innerHTML = vidasEnemigo
-    } else if(ataqueJugadorTemporal == 'AGUA' && ataqueEnemigoTemporal == 'FUEGO') {
-        crearMensaje("GANASTE")
-        vidasEnemigo--
-        spanVidasEnemigo.innerHTML = vidasEnemigo
-    } else if(ataqueJugadorTemporal == 'TIERRA' && ataqueEnemigoTemporal == 'AGUA') {
-        crearMensaje("GANASTE")
-        vidasEnemigo--
-        spanVidasEnemigo.innerHTML = vidasEnemigo
-    } else {
-        crearMensaje("PERDISTE")
-        vidasJugador--
-        spanVidasJugador.innerHTML = vidasJugador
+    for (let index = 0, len = ataqueJugador.length; index <= len - 1; index++) {
+        let ataqueJugadorTemporal = ataqueJugador[index]
+        let ataqueEnemigoTemporal = ataqueEnemigo[index]
+        if (ataqueEnemigoTemporal == ataqueJugadorTemporal) {
+            crearMensaje("EMPATE", index)
+        } else if(ataqueJugadorTemporal == 'FUEGO' && ataqueEnemigoTemporal == 'TIERRA') {
+            crearMensaje("GANASTE", index)
+            vidasEnemigo--
+            spanVidasEnemigo.innerHTML = vidasEnemigo
+        } else if(ataqueJugadorTemporal == 'AGUA' && ataqueEnemigoTemporal == 'FUEGO') {
+            crearMensaje("GANASTE", index)
+            vidasEnemigo--
+            spanVidasEnemigo.innerHTML = vidasEnemigo
+        } else if(ataqueJugadorTemporal == 'TIERRA' && ataqueEnemigoTemporal == 'AGUA') {
+            crearMensaje("GANASTE", index)
+            vidasEnemigo--
+            spanVidasEnemigo.innerHTML = vidasEnemigo
+        } else {
+            crearMensaje("PERDISTE", index)
+            vidasJugador--
+            spanVidasJugador.innerHTML = vidasJugador
+        }
+        revisarVidas()
     }
-    revisarVidas()
 }
 
 function revisarVidas() {
@@ -235,13 +243,13 @@ function revisarVidas() {
     }
 }
 
-function crearMensaje(resultado) {
+function crearMensaje(resultado, indexAtaque) {
     let nuevoAtaqueDelJugador = document.createElement('p')
     let nuevoAtaqueDelEnemigo = document.createElement('p')
 
     sectionMensajes.innerHTML = resultado
-    nuevoAtaqueDelJugador.innerHTML = ataqueJugador.slice(-1)
-    nuevoAtaqueDelEnemigo.innerHTML = ataqueEnemigo.slice(-1)
+    nuevoAtaqueDelJugador.innerHTML = ataqueJugador[indexAtaque]
+    nuevoAtaqueDelEnemigo.innerHTML = ataqueEnemigo[indexAtaque]
 
     ataquesDelJugador.appendChild(nuevoAtaqueDelJugador)
     ataquesDelEnemigo.appendChild(nuevoAtaqueDelEnemigo)

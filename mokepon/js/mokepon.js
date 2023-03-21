@@ -44,8 +44,11 @@ let inputTucapalma
 let botonTierra
 let botonFuego
 let botonAgua
+// Canva
 let lienzo = mapa.getContext('2d')
 let intervalo
+let mapaBackground = new Image()
+mapaBackground.src = './assets/mokemap.webp'
 
 // Inicializacion
 sectionReiniciar.style.display = 'none'
@@ -181,40 +184,33 @@ function iniciarJuego() {
 }
 
 function seleccionarMascotaJugador() {
-    sectionSeleccionarMascota.style.display = 'none'
-    sectionSeleccionarAtaque.style.display = 'flex'
-    sectionVerMapa.style.display = 'flex'
-
     // Validar mascota seleccionada
-    if (inputHipodoge.checked) {
-        spanMascotaJugador.innerHTML = hipodoge.nombre
-        mascotaJugador = hipodoge
-    } else if (inputCapipepo.checked) {
-        spanMascotaJugador.innerHTML = capipepo.nombre
-        mascotaJugador = capipepo
-    } else if (inputRatigueya.checked) {
-        spanMascotaJugador.innerHTML = ratigueya.nombre
-        mascotaJugador = ratigueya
-    } else if (inputLangostelvis.checked) {
-        spanMascotaJugador.innerHTML = langostelvis.nombre
-        mascotaJugador = langostelvis
-    } else if (inputPydos.checked) {
-        spanMascotaJugador.innerHTML = pydos.nombre
-        mascotaJugador = pydos
-    } else if (inputTucapalma.checked) {
-        spanMascotaJugador.innerHTML = tucapalma.nombre
-        mascotaJugador = tucapalma
-        alert('Selecciona una mascota')
-    }
-    // Iniciar mapa
-    iniciarMapa()
-    // Cargar los ataques
-    let ataques = extraerAtaques(mascotaJugador.nombre)
-    mostrarAtaques(ataques)
-    secuenciaAtaques()
+    let mascotaSeleccionada = false
+    mokepones.forEach((mokepon) => {
+        if (document.getElementById(mokepon.nombre.toLowerCase()).checked) {
+            spanMascotaJugador.innerHTML = mokepon.nombre
+            mascotaJugador = mokepon
+            mascotaSeleccionada = true
+        }
+    })
+    if (mascotaSeleccionada) {
+        // Oculta la seleccion de mascotas
+        sectionSeleccionarMascota.style.display = 'none'
+        // Muestra los ataques
+        sectionSeleccionarAtaque.style.display = 'flex'
+        // Iniciar mapa
+        sectionVerMapa.style.display = 'flex'
+        iniciarMapa()
+        // Cargar los ataques
+        let ataques = extraerAtaques(mascotaJugador.nombre)
+        mostrarAtaques(ataques)
+        secuenciaAtaques()
 
-    seleccionarMascotaEnemigo()
-    ataques = extraerAtaques(mascotaEnemigo)
+        seleccionarMascotaEnemigo()
+        ataques = extraerAtaques(mascotaEnemigo)
+    } else {
+        alert('Seleccione una mascota para iniciar el juego')
+    }
 }
 
 function seleccionarMascotaEnemigo() {
@@ -350,18 +346,26 @@ function aleatorio(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min)
 }
 
-// Lienzo
+// Canvas
 function iniciarMapa() {
-    intervalo = setInterval(pintarPersonaje, 50)
+    mapa.width = 320
+    mapa.height = 240
+    intervalo = setInterval(pintarCanvas, 50)
     window.addEventListener('keydown', sePresionoUnaTecla)
     window.addEventListener('keyup', detenerMovimiento)
 }
 
-// Personaje
-function pintarPersonaje() {
+function pintarCanvas() {
     mascotaJugador.x = mascotaJugador.x + mascotaJugador.velocidadX
     mascotaJugador.y = mascotaJugador.y + mascotaJugador.velocidadY
     lienzo.clearRect(0, 0, mapa.width, mapa.height)
+    lienzo.drawImage(
+        mapaBackground,
+        0,
+        0,
+        mapa.width,
+        mapa.height
+    )
     lienzo.drawImage(
         mascotaJugador.mapaFoto,
         mascotaJugador.x,
@@ -373,26 +377,18 @@ function pintarPersonaje() {
 
 function moverMokeponIzquierda() {
     mascotaJugador.velocidadX = -5
-    //mascotaJugador.x = mascotaJugador.x - 5
-    //pintarPersonaje()
 }
 
 function moverMokeponDerecha() {
     mascotaJugador.velocidadX = 5
-    //mascotaJugador.x = mascotaJugador.x + 5
-    //pintarPersonaje()
 }
 
 function moverMokeponArriba() {
     mascotaJugador.velocidadY = -5
-    //mascotaJugador.y = mascotaJugador.y - 5
-    //pintarPersonaje()
 }
 
 function moverMokeponAbajo() {
     mascotaJugador.velocidadY = 5
-    //mascotaJugador.y = mascotaJugador.y + 5
-    //pintarPersonaje()
 }
 
 function detenerMovimiento() {

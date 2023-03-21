@@ -24,6 +24,7 @@ const ataquesDelEnemigo = document.getElementById('ataques-del-enemigo')
 
 // Variables
 let mokepones = []
+let mokeponesEnemigos = []
 let ataqueJugador = []
 let ataqueEnemigo = []
 let ataqueEnemigoDisponible = []
@@ -55,28 +56,38 @@ sectionReiniciar.style.display = 'none'
 
 class Mokepon
 {
-    constructor(nombre, foto, vida)
+    constructor(nombre, foto, vida, fotoMapa, x = 10, y = 10)
     {
         this.nombre = nombre
         this.foto = foto
         this.vida = vida
         this.ataques = []
         // Ubicacion
-        this.x = 20
-        this.y = 30
+        this.x = x
+        this.y = y
         this.velocidadX = 0
         this.velocidadY = 0
-        this.ancho = 80
-        this.alto = 80
+        this.ancho = 40
+        this.alto = 40
         // Lienzo
         this.mapaFoto = new Image()
-        this.mapaFoto.src = foto
+        this.mapaFoto.src = fotoMapa
+    }
+
+    pintarMokepon() {
+        lienzo.drawImage(
+            this.mapaFoto,
+            this.x,
+            this.y,
+            this.ancho,
+            this.alto
+        )    
     }
 }
 
 // Mascotas
 // Hipodoge
-let hipodoge = new Mokepon('Hipodoge', './assets/mokepons_mokepon_hipodoge_attack.png', 5)
+let hipodoge = new Mokepon('Hipodoge', './assets/mokepons_mokepon_hipodoge_attack.png', 5, './assets/hipodoge.webp')
 hipodoge.ataques.push(
     { nombre: '💧' },
     { nombre: '💧' },
@@ -84,8 +95,16 @@ hipodoge.ataques.push(
     { nombre: '🌱' },
     { nombre: '🔥' },
 )
+let hipodogeEnemigo = new Mokepon('Hipodoge', './assets/mokepons_mokepon_hipodoge_attack.png', 5, './assets/hipodoge.webp', 80, 120)
+hipodogeEnemigo.ataques.push(
+    { nombre: '💧' },
+    { nombre: '💧' },
+    { nombre: '💧' },
+    { nombre: '🌱' },
+    { nombre: '🔥' },
+)
 // Capipepo
-let capipepo = new Mokepon('Capipepo', './assets/mokepons_mokepon_capipepo_attack.png', 5)
+let capipepo = new Mokepon('Capipepo', './assets/mokepons_mokepon_capipepo_attack.png', 5, './assets/capipepo.webp')
 capipepo.ataques.push(
     { nombre: '🌱' },
     { nombre: '🌱' },
@@ -93,8 +112,16 @@ capipepo.ataques.push(
     { nombre: '💧' },
     { nombre: '🔥' },
 )
+let capipepoEnemigo = new Mokepon('Capipepo', './assets/mokepons_mokepon_capipepo_attack.png', 5, './assets/capipepo.webp', 150, 95)
+capipepoEnemigo.ataques.push(
+    { nombre: '🌱' },
+    { nombre: '🌱' },
+    { nombre: '🌱' },
+    { nombre: '💧' },
+    { nombre: '🔥' },
+)
 // Ratigüeya
-let ratigueya = new Mokepon('Ratigüeya', './assets/mokepons_mokepon_ratigueya_attack.png', 5)
+let ratigueya = new Mokepon('Ratigüeya', './assets/mokepons_mokepon_ratigueya_attack.png', 5, './assets/ratigueya.webp')
 ratigueya.ataques.push(
     { nombre: '🔥' },
     { nombre: '🔥' },
@@ -102,33 +129,42 @@ ratigueya.ataques.push(
     { nombre: '💧' },
     { nombre: '🌱' },
 )
+let ratigueyaEnemigo = new Mokepon('Ratigüeya', './assets/mokepons_mokepon_ratigueya_attack.png', 5, './assets/ratigueya.webp', 200, 190)
+ratigueyaEnemigo.ataques.push(
+    { nombre: '🔥' },
+    { nombre: '🔥' },
+    { nombre: '🔥' },
+    { nombre: '💧' },
+    { nombre: '🌱' },
+)
+
 // Langostelvis
-let langostelvis = new Mokepon('Langostelvis', './assets/mokepons_mokepon_langostelvis_attack.png', 5)
+/*let langostelvis = new Mokepon('Langostelvis', './assets/mokepons_mokepon_langostelvis_attack.png', 5)
 langostelvis.ataques.push(
     { nombre: '💧' },
     { nombre: '💧' },
     { nombre: '💧' },
     { nombre: '🌱' },
     { nombre: '🔥' },
-)
+)*/
 // Pydos
-let pydos = new Mokepon('Pydos', './assets/mokepons_mokepon_pydos_attack.png', 5)
+/*let pydos = new Mokepon('Pydos', './assets/mokepons_mokepon_pydos_attack.png', 5)
 pydos.ataques.push(
     { nombre: '🔥' },
     { nombre: '🔥' },
     { nombre: '🔥' },
     { nombre: '💧' },
     { nombre: '🌱' },
-)
+)*/
 // Tucapalma
-let tucapalma = new Mokepon('Tucapalma', './assets/mokepons_mokepon_tucapalma_attack.png', 5)
+/*let tucapalma = new Mokepon('Tucapalma', './assets/mokepons_mokepon_tucapalma_attack.png', 5)
 tucapalma.ataques.push(
     { nombre: '🌱' },
     { nombre: '🌱' },
     { nombre: '🌱' },
     { nombre: '💧' },
     { nombre: '🔥' },
-)
+)*/
 
 // Ataques
 let ataquesMascotas = {
@@ -154,7 +190,9 @@ let ataquesMascotas = {
     }
 }
 
-mokepones.push(hipodoge, capipepo, ratigueya, langostelvis, pydos, tucapalma)
+//mokepones.push(hipodoge, capipepo, ratigueya, langostelvis, pydos, tucapalma)
+mokepones.push(hipodoge, capipepo, ratigueya)
+mokeponesEnemigos.push(hipodogeEnemigo, capipepoEnemigo, ratigueyaEnemigo)
 
 function iniciarJuego() {
     sectionSeleccionarAtaque.style.display = 'none'
@@ -172,13 +210,6 @@ function iniciarJuego() {
 
     });
 
-    inputHipodoge = document.getElementById(hipodoge.nombre.toLowerCase())
-    inputCapipepo = document.getElementById(capipepo.nombre.toLowerCase())
-    inputRatigueya = document.getElementById(ratigueya.nombre.toLowerCase())
-    inputLangostelvis = document.getElementById(langostelvis.nombre.toLowerCase())
-    inputPydos = document.getElementById(pydos.nombre.toLowerCase())
-    inputTucapalma = document.getElementById(tucapalma.nombre.toLowerCase())
-    
     botonMascotaJugador.addEventListener('click', seleccionarMascotaJugador)
     botonReiniciar.addEventListener('click', reiniciarJuego)
 }
@@ -366,13 +397,12 @@ function pintarCanvas() {
         mapa.width,
         mapa.height
     )
-    lienzo.drawImage(
-        mascotaJugador.mapaFoto,
-        mascotaJugador.x,
-        mascotaJugador.y,
-        mascotaJugador.ancho,
-        mascotaJugador.alto
-    )
+    // Pinta la mascota del jugador
+    mascotaJugador.pintarMokepon()
+    // Pinta los enemigos
+    mokeponesEnemigos.forEach((mokepon) => {
+        mokepon.pintarMokepon()
+    })
 }
 
 function moverMokeponIzquierda() {

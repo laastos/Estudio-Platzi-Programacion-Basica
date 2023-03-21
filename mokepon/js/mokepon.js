@@ -45,6 +45,7 @@ let botonTierra
 let botonFuego
 let botonAgua
 let lienzo = mapa.getContext('2d')
+let intervalo
 
 // Inicializacion
 sectionReiniciar.style.display = 'none'
@@ -60,6 +61,8 @@ class Mokepon
         // Ubicacion
         this.x = 20
         this.y = 30
+        this.velocidadX = 0
+        this.velocidadY = 0
         this.ancho = 80
         this.alto = 80
         // Lienzo
@@ -203,8 +206,8 @@ function seleccionarMascotaJugador() {
         mascotaJugador = tucapalma
         alert('Selecciona una mascota')
     }
-    // Pintar el personaje en el lienzo
-    pintarPersonaje()
+    // Iniciar mapa
+    iniciarMapa()
     // Cargar los ataques
     let ataques = extraerAtaques(mascotaJugador.nombre)
     mostrarAtaques(ataques)
@@ -348,7 +351,16 @@ function aleatorio(min, max) {
 }
 
 // Lienzo
+function iniciarMapa() {
+    intervalo = setInterval(pintarPersonaje, 50)
+    window.addEventListener('keydown', sePresionoUnaTecla)
+    window.addEventListener('keyup', detenerMovimiento)
+}
+
+// Personaje
 function pintarPersonaje() {
+    mascotaJugador.x = mascotaJugador.x + mascotaJugador.velocidadX
+    mascotaJugador.y = mascotaJugador.y + mascotaJugador.velocidadY
     lienzo.clearRect(0, 0, mapa.width, mapa.height)
     lienzo.drawImage(
         mascotaJugador.mapaFoto,
@@ -360,20 +372,49 @@ function pintarPersonaje() {
 }
 
 function moverMokeponIzquierda() {
-    mascotaJugador.x = mascotaJugador.x - 5
-    pintarPersonaje()
+    mascotaJugador.velocidadX = -5
+    //mascotaJugador.x = mascotaJugador.x - 5
+    //pintarPersonaje()
 }
+
 function moverMokeponDerecha() {
-    mascotaJugador.x = mascotaJugador.x + 5
-    pintarPersonaje()
+    mascotaJugador.velocidadX = 5
+    //mascotaJugador.x = mascotaJugador.x + 5
+    //pintarPersonaje()
 }
+
 function moverMokeponArriba() {
-    mascotaJugador.y = mascotaJugador.y - 5
-    pintarPersonaje()
+    mascotaJugador.velocidadY = -5
+    //mascotaJugador.y = mascotaJugador.y - 5
+    //pintarPersonaje()
 }
+
 function moverMokeponAbajo() {
-    mascotaJugador.y = mascotaJugador.y + 5
-    pintarPersonaje()
+    mascotaJugador.velocidadY = 5
+    //mascotaJugador.y = mascotaJugador.y + 5
+    //pintarPersonaje()
+}
+
+function detenerMovimiento() {
+    mascotaJugador.velocidadX = 0
+    mascotaJugador.velocidadY = 0
+}
+
+function sePresionoUnaTecla(event) {
+    switch(event.key) {
+        case 'ArrowUp':
+            moverMokeponArriba()
+            break;
+        case 'ArrowDown':
+            moverMokeponAbajo()
+            break;
+        case 'ArrowLeft':
+            moverMokeponIzquierda()
+            break;
+        case 'ArrowRight':
+            moverMokeponDerecha()
+            break;
+        }
 }
 
 window.addEventListener('load', iniciarJuego)

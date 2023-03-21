@@ -1,19 +1,26 @@
-const sectionSeleccionarAtaque = document.getElementById('seleccionar-ataque')
+// Mascotas
 const sectionSeleccionarMascota = document.getElementById('seleccionar-mascota')
-const sectionReiniciar = document.getElementById('reiniciar')
-const sectionMensajes = document.getElementById('resultado')
 const contenedorTarjetas = document.getElementById('contenedorTarjetas')
-const contenedorAtaques = document.getElementById('contenedorAtaques')
 const botonMascotaJugador = document.getElementById('boton-mascota')
+// Mapa
+const sectionVerMapa = document.getElementById('ver-mapa')
+const mapa = document.getElementById('mapa')
+// Controles
+const sectionReiniciar = document.getElementById('reiniciar')
 const botonReiniciar = document.getElementById('boton-reiniciar')
+const sectionMensajes = document.getElementById('resultado')
+// Ataques
+const contenedorAtaques = document.getElementById('contenedorAtaques')
+const sectionSeleccionarAtaque = document.getElementById('seleccionar-ataque')
+// Mascotas seleccionadas
 const spanMascotaJugador = document.getElementById('mascota-jugador')
 const spanMascotaEnemigo = document.getElementById('mascota-enemigo')
+// Vidas / Victorias
 const spanVidasJugador = document.getElementById('vidas-jugador')
 const spanVidasEnemigo = document.getElementById('vidas-enemigo')
+// Log de ataques
 const ataquesDelJugador = document.getElementById('ataques-del-jugador')
 const ataquesDelEnemigo = document.getElementById('ataques-del-enemigo')
-
-sectionReiniciar.style.display = 'none'
 
 // Variables
 let mokepones = []
@@ -37,6 +44,10 @@ let inputTucapalma
 let botonTierra
 let botonFuego
 let botonAgua
+let lienzo = mapa.getContext('2d')
+
+// Inicializacion
+sectionReiniciar.style.display = 'none'
 
 class Mokepon
 {
@@ -133,6 +144,8 @@ mokepones.push(hipodoge, capipepo, ratigueya, langostelvis, pydos, tucapalma)
 
 function iniciarJuego() {
     sectionSeleccionarAtaque.style.display = 'none'
+    sectionVerMapa.style.display = 'none'
+
     mokepones.forEach((mokepon) => {
         opcionDeMokepones = `
         <input type="radio" name="mascota" id="${mokepon.nombre.toLowerCase()}" />
@@ -159,6 +172,13 @@ function iniciarJuego() {
 function seleccionarMascotaJugador() {
     sectionSeleccionarMascota.style.display = 'none'
     sectionSeleccionarAtaque.style.display = 'flex'
+    // Mapa
+    sectionVerMapa.style.display = 'flex'
+    let imagenCapipepo = new Image()
+    imagenCapipepo.src = capipepo.foto
+    lienzo.drawImage(imagenCapipepo, 20, 40, 100, 100)
+
+    // Validar mascota seleccionada
     if (inputHipodoge.checked) {
         spanMascotaJugador.innerHTML = hipodoge.nombre
         mascotaJugador = hipodoge.nombre

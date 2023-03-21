@@ -57,6 +57,14 @@ class Mokepon
         this.foto = foto
         this.vida = vida
         this.ataques = []
+        // Ubicacion
+        this.x = 20
+        this.y = 30
+        this.ancho = 80
+        this.alto = 80
+        // Lienzo
+        this.mapaFoto = new Image()
+        this.mapaFoto.src = foto
     }
 }
 
@@ -172,35 +180,33 @@ function iniciarJuego() {
 function seleccionarMascotaJugador() {
     sectionSeleccionarMascota.style.display = 'none'
     sectionSeleccionarAtaque.style.display = 'flex'
-    // Mapa
     sectionVerMapa.style.display = 'flex'
-    let imagenCapipepo = new Image()
-    imagenCapipepo.src = capipepo.foto
-    lienzo.drawImage(imagenCapipepo, 20, 40, 100, 100)
 
     // Validar mascota seleccionada
     if (inputHipodoge.checked) {
         spanMascotaJugador.innerHTML = hipodoge.nombre
-        mascotaJugador = hipodoge.nombre
+        mascotaJugador = hipodoge
     } else if (inputCapipepo.checked) {
         spanMascotaJugador.innerHTML = capipepo.nombre
-        mascotaJugador = capipepo.nombre
+        mascotaJugador = capipepo
     } else if (inputRatigueya.checked) {
         spanMascotaJugador.innerHTML = ratigueya.nombre
-        mascotaJugador = ratigueya.nombre
+        mascotaJugador = ratigueya
     } else if (inputLangostelvis.checked) {
         spanMascotaJugador.innerHTML = langostelvis.nombre
-        mascotaJugador = langostelvis.nombre
+        mascotaJugador = langostelvis
     } else if (inputPydos.checked) {
         spanMascotaJugador.innerHTML = pydos.nombre
-        mascotaJugador = pydos.nombre
+        mascotaJugador = pydos
     } else if (inputTucapalma.checked) {
         spanMascotaJugador.innerHTML = tucapalma.nombre
-        mascotaJugador = tucapalma.nombre
-    } else {
+        mascotaJugador = tucapalma
         alert('Selecciona una mascota')
     }
-    let ataques = extraerAtaques(mascotaJugador)
+    // Pintar el personaje en el lienzo
+    pintarPersonaje()
+    // Cargar los ataques
+    let ataques = extraerAtaques(mascotaJugador.nombre)
     mostrarAtaques(ataques)
     secuenciaAtaques()
 
@@ -339,6 +345,35 @@ function reiniciarJuego() {
 
 function aleatorio(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min)
+}
+
+// Lienzo
+function pintarPersonaje() {
+    lienzo.clearRect(0, 0, mapa.width, mapa.height)
+    lienzo.drawImage(
+        mascotaJugador.mapaFoto,
+        mascotaJugador.x,
+        mascotaJugador.y,
+        mascotaJugador.ancho,
+        mascotaJugador.alto
+    )
+}
+
+function moverMokeponIzquierda() {
+    mascotaJugador.x = mascotaJugador.x - 5
+    pintarPersonaje()
+}
+function moverMokeponDerecha() {
+    mascotaJugador.x = mascotaJugador.x + 5
+    pintarPersonaje()
+}
+function moverMokeponArriba() {
+    mascotaJugador.y = mascotaJugador.y - 5
+    pintarPersonaje()
+}
+function moverMokeponAbajo() {
+    mascotaJugador.y = mascotaJugador.y + 5
+    pintarPersonaje()
 }
 
 window.addEventListener('load', iniciarJuego)

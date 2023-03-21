@@ -227,8 +227,6 @@ function seleccionarMascotaJugador() {
     if (mascotaSeleccionada) {
         // Oculta la seleccion de mascotas
         sectionSeleccionarMascota.style.display = 'none'
-        // Muestra los ataques
-        sectionSeleccionarAtaque.style.display = 'flex'
         // Iniciar mapa
         sectionVerMapa.style.display = 'flex'
         iniciarMapa()
@@ -237,17 +235,19 @@ function seleccionarMascotaJugador() {
         mostrarAtaques(ataques)
         secuenciaAtaques()
 
-        seleccionarMascotaEnemigo()
-        ataques = extraerAtaques(mascotaEnemigo)
     } else {
         alert('Seleccione una mascota para iniciar el juego')
     }
 }
 
-function seleccionarMascotaEnemigo() {
-    let mascotaAleatoria = aleatorio(0, mokepones.length - 1)
-
-    mascotaEnemigo = mokepones[mascotaAleatoria]
+function seleccionarMascotaEnemigo(enemigo = undefined) {
+    if (enemigo === undefined) {
+        let mascotaAleatoria = aleatorio(0, mokepones.length - 1)
+        mascotaEnemigo = mokepones[mascotaAleatoria]
+    } else {
+        mascotaEnemigo = enemigo
+    }
+    // Ataques del enemigo
     ataqueEnemigoDisponible = [ ...mascotaEnemigo.ataques ]
     spanMascotaEnemigo.innerHTML = mascotaEnemigo.nombre
 }
@@ -403,6 +403,19 @@ function pintarCanvas() {
     mokeponesEnemigos.forEach((mokepon) => {
         mokepon.pintarMokepon()
     })
+    // Revisar colision
+    if (mascotaJugador.velocidadX !== 0 || mascotaJugador.velocidadY !== 0) {
+        mokeponesEnemigos.forEach((mokepon) => {
+            if (revisarColision(mokepon)) {
+                detenerMovimiento()
+                // Muestra la sección de los ataques
+                sectionSeleccionarAtaque.style.display = 'flex'
+                // Oculta el mapa
+                sectionVerMapa.style.display = 'none'
+                seleccionarMascotaEnemigo(mokepon)
+            }
+        })
+    }
 }
 
 function moverMokeponIzquierda() {
@@ -424,6 +437,29 @@ function moverMokeponAbajo() {
 function detenerMovimiento() {
     mascotaJugador.velocidadX = 0
     mascotaJugador.velocidadY = 0
+}
+
+function revisarColision(enemigo) {
+    // Mascota
+    arribaMascota = mascotaJugador.y
+    abajoMascota = mascotaJugador.y + mascotaJugador.alto
+    izquierdaMascota = mascotaJugador.x
+    derechaMascota = mascotaJugador.x + mascotaJugador.ancho
+    // Enemigo
+    arribaEnemigo = enemigo.y
+    abajoEnemigo = enemigo.y + enemigo.alto
+    izquierdaEnemigo = enemigo.x
+    derechaEnemigo = enemigo.x + enemigo.ancho
+
+    if (
+        (abajoMascota < arribaEnemigo)
+        || (arribaMascota > abajoEnemigo)
+        || (derechaMascota < izquierdaEnemigo)
+        || (izquierdaMascota > derechaEnemigo)
+    ) {
+        return false
+    }
+    return true
 }
 
 function sePresionoUnaTecla(event) {

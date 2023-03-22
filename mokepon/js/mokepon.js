@@ -223,11 +223,9 @@ function iniciarJuego() {
 function unirseAlJuego() {
     fetch('http://localhost:8080/unirse')
         .then((response) => {
-            console.log(response)
             if (response.ok) {
                 response.text()
                     .then((responseText) => {
-                        console.log(responseText)
                         jugadorId = responseText
                     })
             }
@@ -245,6 +243,8 @@ function seleccionarMascotaJugador() {
         }
     })
     if (mascotaSeleccionada) {
+        // Registrar la mascota seleccionada en el API
+        seleccionarMokepon(mascotaJugador)
         // Oculta la seleccion de mascotas
         sectionSeleccionarMascota.style.display = 'none'
         // Iniciar mapa
@@ -257,6 +257,21 @@ function seleccionarMascotaJugador() {
     } else {
         alert('Seleccione una mascota para iniciar el juego')
     }
+}
+
+function seleccionarMokepon (mascotaJugador) {
+    fetch(
+        `http://localhost:8080/mokepon/${jugadorId}`,
+        {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                mokepon: mascotaJugador.nombre
+            })
+        }
+    )
 }
 
 function seleccionarMascotaEnemigo(enemigo = undefined) {

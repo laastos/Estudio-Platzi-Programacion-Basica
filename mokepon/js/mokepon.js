@@ -23,6 +23,7 @@ const ataquesDelJugador = document.getElementById('ataques-del-jugador')
 const ataquesDelEnemigo = document.getElementById('ataques-del-enemigo')
 
 // Variables
+let jugadorId
 let mokepones = []
 let mokeponesEnemigos = []
 let ataqueJugador = []
@@ -215,6 +216,22 @@ function iniciarJuego() {
 
     botonMascotaJugador.addEventListener('click', seleccionarMascotaJugador)
     botonReiniciar.addEventListener('click', reiniciarJuego)
+
+    unirseAlJuego()
+}
+
+function unirseAlJuego() {
+    fetch('http://localhost:8080/unirse')
+        .then((response) => {
+            console.log(response)
+            if (response.ok) {
+                response.text()
+                    .then((responseText) => {
+                        console.log(responseText)
+                        jugadorId = responseText
+                    })
+            }
+        })
 }
 
 function seleccionarMascotaJugador() {

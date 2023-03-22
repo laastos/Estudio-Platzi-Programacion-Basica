@@ -21,6 +21,8 @@ const spanVidasEnemigo = document.getElementById('vidas-enemigo')
 // Log de ataques
 const ataquesDelJugador = document.getElementById('ataques-del-jugador')
 const ataquesDelEnemigo = document.getElementById('ataques-del-enemigo')
+// Constantes
+let intervaloTiempo = 80
 
 // Variables
 let jugadorId
@@ -411,7 +413,8 @@ function aleatorio(min, max) {
 function iniciarMapa() {
     mapa.width = anchoMapa
     mapa.height = altoMapa
-    intervalo = setInterval(pintarCanvas, 50)
+    intervalo = setInterval(pintarCanvas, intervaloTiempo)
+    enviarPosicion(mascotaJugador.x, mascotaJugador.y)
     window.addEventListener('keydown', sePresionoUnaTecla)
     window.addEventListener('keyup', detenerMovimiento)
 }
@@ -429,6 +432,9 @@ function pintarCanvas() {
     )
     // Pinta la mascota del jugador
     mascotaJugador.pintarMokepon()
+    if (mascotaJugador.velocidadX !== 0 || mascotaJugador.velocidadY !== 0) {
+        enviarPosicion(mascotaJugador.x, mascotaJugador.y)
+    }
     // Pinta los enemigos
     mokeponesEnemigos.forEach((mokepon) => {
         mokepon.pintarMokepon()
@@ -447,6 +453,27 @@ function pintarCanvas() {
             }
         })
     }
+}
+
+function enviarPosicion(x, y) {
+    fetch(
+        `http://localhost:8080/mokepon/${jugadorId}/posicion`,
+        {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                x,
+                y
+            })
+    }).then((response) => {
+        if (response.ok) {
+            response.json().then(({enemigos}) => {
+                console.log(enemigos)
+            })
+        }
+    })
 }
 
 function moverMokeponIzquierda() {

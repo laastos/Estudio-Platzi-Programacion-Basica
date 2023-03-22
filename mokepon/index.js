@@ -43,6 +43,7 @@ app.get('/unirse', (req, res) => {
     const id = `${Math.floor(Math.random() * Date.now())}`
     const jugador = new Jugador(id)
     jugadores.push(jugador)
+    console.log(jugadores)
     // Header
     res.setHeader('Access-Control-Allow-Origin', '*')
     res.send(id)

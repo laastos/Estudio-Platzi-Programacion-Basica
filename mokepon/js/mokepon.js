@@ -28,7 +28,6 @@ let intervaloTiempo = 50
 let jugadorId
 let mokepones = []
 let mokeponesEnemigos = []
-let mokeponesEnemigosId = []
 let ataqueJugador = []
 let ataqueEnemigo = []
 let ataqueEnemigoDisponible = []

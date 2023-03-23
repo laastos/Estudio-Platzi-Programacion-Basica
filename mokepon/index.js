@@ -21,15 +21,23 @@ class Jugador {
     actualizarPosicion(x, y) {
         this.mokepon.asignarPosicion(x, y)
     }
+
+    asignarAtaques(ataques) {
+        this.mokepon.asignarAtaques(ataques)
+    }
 }
 
 class Mokepon {
     constructor(nombre) {
         this.nombre = nombre
+        this.ataques = []
     }
     asignarPosicion(x, y) {
         this.x = x
         this.y = y
+    }
+    asignarAtaques(ataques) {
+        this.ataques = ataques
     }
 }
 
@@ -75,6 +83,20 @@ app.post('/mokepon/:jugadorId/posicion', (req, res) => {
         const enemigos = jugadores.filter((jugador) => jugadorId !== jugador.id)
         console.log(jugadores)
         res.send({enemigos})
+    } else {
+        res.status(400).send('Jugador no encontrado')
+    }
+})
+
+// Recibir ataques
+app.post('/mokepon/:jugadorId/ataques', (req, res) => {
+    const jugadorId = req.params.jugadorId || ''
+    const ataques = req.body.ataques || []
+    const jugadorIndex = buscarJugador(jugadorId)
+    if (jugadorIndex >= 0) {
+        jugadores[jugadorIndex].asignarAtaques(ataques)
+        console.log(jugadores[jugadorIndex])
+        res.end()
     } else {
         res.status(400).send('Jugador no encontrado')
     }

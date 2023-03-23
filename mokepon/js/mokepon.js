@@ -26,6 +26,7 @@ let intervaloTiempo = 50
 
 // Variables
 let jugadorId
+let enemigoId
 let mokepones = []
 let mokeponesEnemigos = []
 let ataqueJugador = []
@@ -313,9 +314,26 @@ function secuenciaAtaques() {
             if (e.target.classList.contains('boton-agua')) {
                 ataqueJugador.push('AGUA')
             }
-            ataqueAleatorioEnemigo()
+            if (ataqueJugador.length === 5) {
+                enviarAtaques()
+            }
         })
     })
+}
+
+function enviarAtaques() {
+    fetch(
+        `http://localhost:8080/mokepon/${jugadorId}/ataques`,
+        {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                ataques: ataqueJugador
+            })
+        }
+    )
 }
 
 function ataqueAleatorioEnemigo() {
@@ -433,17 +451,19 @@ function pintarCanvas() {
     })
     // Revisar colision
     if (mascotaJugador.velocidadX !== 0 || mascotaJugador.velocidadY !== 0) {
-        /*mokeponesEnemigos.forEach((mokepon) => {
+        mokeponesEnemigos.forEach((mokepon) => {
             if (revisarColision(mokepon)) {
+                enemigoId = mokepon.id
+                let enemigoIndex = buscarEnemigoIndex(enemigoId)
                 detenerMovimiento()
                 clearInterval(intervalo)
                 // Muestra la sección de los ataques
                 sectionSeleccionarAtaque.style.display = 'flex'
                 // Oculta el mapa
                 sectionVerMapa.style.display = 'none'
-                seleccionarMascotaEnemigo(mokepon)
+                seleccionarMascotaEnemigo(mokeponesEnemigos[enemigoIndex])
             }
-        })*/
+        })
     }
 }
 
@@ -553,6 +573,11 @@ function sePresionoUnaTecla(event) {
             moverMokeponDerecha()
             break;
         }
+}
+
+// Buscar enemigo
+function buscarEnemigoIndex(enemigoId) {
+    return mokeponesEnemigos.findIndex((mokeponTemp) => mokeponTemp.id === enemigoId)
 }
 
 window.addEventListener('load', iniciarJuego)

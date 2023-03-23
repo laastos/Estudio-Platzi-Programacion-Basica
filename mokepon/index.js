@@ -14,16 +14,19 @@ class Jugador {
         this.id = id
     }
 
-    asignarMokepon(mokepon) {
+    setMokepon(mokepon) {
         this.mokepon = mokepon
     }
 
-    actualizarPosicion(x, y) {
-        this.mokepon.asignarPosicion(x, y)
+    setPosicion(x, y) {
+        this.mokepon.setPosicion(x, y)
     }
 
-    asignarAtaques(ataques) {
-        this.mokepon.asignarAtaques(ataques)
+    setAtaques(ataques) {
+        this.mokepon.setAtaques(ataques)
+    }
+    getAtaques() {
+        return this.mokepon.getAtaques()
     }
 }
 
@@ -32,18 +35,20 @@ class Mokepon {
         this.nombre = nombre
         this.ataques = []
     }
-    asignarPosicion(x, y) {
+    setPosicion(x, y) {
         this.x = x
         this.y = y
     }
-    asignarAtaques(ataques) {
+    setAtaques(ataques) {
         this.ataques = ataques
+    }
+    getAtaques() {
+        return this.ataques
     }
 }
 
 function buscarJugador(jugadorId) {
     return jugadores.findIndex((jugador) => jugador.id === jugadorId)
-
 }
 
 // Generacion de identificador en el juego
@@ -63,7 +68,7 @@ app.post('/mokepon/:jugadorId', (req, res) => {
     const mokeponNombre = req.body.mokepon || ''
     const jugadorIndex = buscarJugador(jugadorId)
     if (jugadorIndex >= 0) {
-        jugadores[jugadorIndex].asignarMokepon(new Mokepon(mokeponNombre))
+        jugadores[jugadorIndex].setMokepon(new Mokepon(mokeponNombre))
         console.log(jugadores)
         res.end()
     } else {
@@ -78,7 +83,7 @@ app.post('/mokepon/:jugadorId/posicion', (req, res) => {
     const y = req.body.y || 0
     const jugadorIndex = buscarJugador(jugadorId)
     if (jugadorIndex >= 0) {
-        jugadores[jugadorIndex].actualizarPosicion(x, y)
+        jugadores[jugadorIndex].setPosicion(x, y)
 
         const enemigos = jugadores.filter((jugador) => jugadorId !== jugador.id)
         console.log(jugadores)
@@ -94,12 +99,27 @@ app.post('/mokepon/:jugadorId/ataques', (req, res) => {
     const ataques = req.body.ataques || []
     const jugadorIndex = buscarJugador(jugadorId)
     if (jugadorIndex >= 0) {
-        jugadores[jugadorIndex].asignarAtaques(ataques)
+        jugadores[jugadorIndex].setAtaques(ataques)
         console.log(jugadores[jugadorIndex])
         res.end()
     } else {
         res.status(400).send('Jugador no encontrado')
     }
+})
+
+// Obtener ataques
+app.get('/mokepon/:jugadorId/ataques', (req, res) => {
+    const jugadorId = req.params.jugadorId || ''
+    const jugadorIndex = buscarJugador(jugadorId)
+    if (jugadorIndex >= 0) {
+        let jugador = jugadores[jugadorIndex]
+        res.send({
+            ataques: jugador.getAtaques() || []
+        })
+    } else {
+        res.status(400).send('Jugador no encontrado')
+    }
+
 })
 
 app.listen(8080, () => {

@@ -277,7 +277,7 @@ function seleccionarMascotaEnemigo(enemigo = undefined) {
         mascotaEnemigo = enemigo
     }
     // Ataques del enemigo
-    ataqueEnemigoDisponible = [ ...mascotaEnemigo.ataques ]
+    //ataqueEnemigoDisponible = [ ...mascotaEnemigo.ataques ]
     spanMascotaEnemigo.innerHTML = mascotaEnemigo.nombre
 }
 
@@ -334,6 +334,24 @@ function enviarAtaques() {
             })
         }
     )
+
+    intervalo = setInterval(obtenerAtaques, intervaloTiempo)
+}
+
+function obtenerAtaques() {
+    fetch(`http://localhost:8080/mokepon/${enemigoId}/ataques`)
+        .then((response) => {
+            if (response.ok) {
+                response.json()
+                    .then(({ ataques }) => {
+                        if (ataques.length === 5) {
+                            clearInterval(intervalo)
+                            ataqueEnemigo = ataques
+                            combate()
+                        }
+                    })
+            }
+        })
 }
 
 function ataqueAleatorioEnemigo() {

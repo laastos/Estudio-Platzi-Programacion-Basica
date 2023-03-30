@@ -57,6 +57,8 @@ mapaBackground.src = './assets/mokemap.webp'
 let anchoMapaMaximo = 350
 let anchoMapa = (window.innerWidth - 20 > anchoMapaMaximo) ? anchoMapaMaximo - 20 : window.innerWidth - 20
 let altoMapa = anchoMapa * 600 / 800
+// Servidor
+let SERVIDOR_DIRECCION = '..'
 
 // Inicializacion
 sectionReiniciar.style.display = 'none'
@@ -215,7 +217,7 @@ function iniciarJuego() {
 }
 
 function unirseAlJuego() {
-    fetch('http://localhost:8080/unirse')
+    fetch(`${SERVIDOR_DIRECCION}/unirse`)
         .then((response) => {
             if (response.ok) {
                 response.text()
@@ -256,7 +258,7 @@ function seleccionarMascotaJugador() {
 
 function seleccionarMokepon (mascotaJugador) {
     fetch(
-        `http://localhost:8080/mokepon/${jugadorId}`,
+        `${SERVIDOR_DIRECCION}/mokepon/${jugadorId}`,
         {
             method: 'POST',
             headers: {
@@ -323,7 +325,7 @@ function secuenciaAtaques() {
 
 function enviarAtaques() {
     fetch(
-        `http://localhost:8080/mokepon/${jugadorId}/ataques`,
+        `${SERVIDOR_DIRECCION}/mokepon/${jugadorId}/ataques`,
         {
             method: 'POST',
             headers: {
@@ -339,7 +341,7 @@ function enviarAtaques() {
 }
 
 function obtenerAtaques() {
-    fetch(`http://localhost:8080/mokepon/${enemigoId}/ataques`)
+    fetch(`${SERVIDOR_DIRECCION}/mokepon/${enemigoId}/ataques`)
         .then((response) => {
             if (response.ok) {
                 response.json()
@@ -487,7 +489,7 @@ function pintarCanvas() {
 
 function enviarPosicion(x, y) {
     fetch(
-        `http://localhost:8080/mokepon/${jugadorId}/posicion`,
+        `${SERVIDOR_DIRECCION}/mokepon/${jugadorId}/posicion`,
         {
             method: 'POST',
             headers: {

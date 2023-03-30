@@ -2,6 +2,8 @@ const express = require('express')
 const cors = require('cors')
 
 const app = express()
+
+app.use(express.static('public'))
 // Gestion de CORS
 app.use(cors())
 // Habilita la gestión de JSON en las peticiones
